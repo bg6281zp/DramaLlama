@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- 
+Team Drama LLama:
+Carly Coughlin
+KylieRae Daigle
+Joel Hobart
+Patrick Inthisane
+Donovan Smith
+
+Iteration 2
+February 22, 2017
+
+Sources/References:
+ Recipe Maker (BootstrapCDN): https://www.bootstrapcdn.com/
+-->
+<html>
+
+<head>
+    <title>Static Recipe</title>
+    <meta charset="utf-8">
+<!-- -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- -->
+    <style>
+        body {
+            position: relative;
+        }        
+        #step1 {
+            padding-top: 50px;
+            height: 500px;
+            color: #fff;
+            background-color: #64BBCC;
+        }        
+        #step2 {
+            padding-top: 50px;
+            height: 500px;
+            color: #fff;
+            background-color: #1D8499;
+        }        
+        #step3 {
+            padding-top: 50px;
+            height: 500px;
+            color: #fff;
+            background-color: #FFD7D6;
+        }        
+        #step4 {
+            padding-top: 50px;
+            height: 500px;
+            color: #fff;
+            background-color: #CC6490;
+        }
+    </style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+<!-- -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#recipeSteps">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Perfect Scotch</a>
+            </div>
+            <div>
+                <div class="collapse navbar-collapse" id="recipeSteps">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#step1">Step 1</a></li>
+                        <li><a href="#step2">Step 2</a></li>
+                        <li><a href="#step3">Step 3</a></li>
+                        <li><a href="#step4">Step 4</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+<!-- -->
+    <div id="step1" class="container-fluid">
+        <h5>Step 1</h5>
+        <h1>Obtain</h1>
+        <ul>
+            <li>Whiskey (Scotch preferably)</li>
+        </ul>
+    </div>
+    <div id="step2" class="container-fluid">
+        <h5>Step 2</h5>
+        <h1>Mix</h1>
+        <ul>
+            <li>Whiskey</li>
+            <li>Ice or use a splash of water</li>
+            <li>Cup</li>
+        </ul>
+    </div>
+    <div id="step3" class="container-fluid">
+        <h5>Step 3</h5>
+        <h1>Drink</h1>
+        <ul>
+            <li>Cup</li>
+            <li>Your Mouth</li>
+        </ul>
+    </div>
+    <div id="step4" class="container-fluid">
+        <h5>Step 4</h5>
+        <h1>Enjoy</h1>
+        <ul>
+            <li>Party!</li>
+        </ul>
+    </div>
+
+</body>
+
+</html>

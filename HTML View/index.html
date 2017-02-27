@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--
+Team Drama LLama:
+Carly Coughlin
+KylieRae Daigle
+Joel Hobart
+Patrick Inthisane
+Donovan Smith
+
+Iteration 2
+February 22, 2017
+
+Sources/References:
+Side Navigation Bar: https://www.w3schools.com/howto/howto_js_sidenav.asp
+-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Nummy Llama</title>
+    <meta name="description" content="A new way to make and use recipes.">
+    <link rel="stylesheet" href="resources/css/main.css">
+</head>
+
+<body>
+    
+<!--Top Menu Bar-->
+    <header class="header">
+        <div onclick="openNav()" class="menu-icon-cont">
+        <div class="menu-icon"></div>
+        <div class="menu-icon"></div>
+        <div class="menu-icon"></div></div>
+        <form action="/action_page.php"> 
+        <input type="text" name="search">
+
+        </form>
+        <div class="user"><a href="#">Gordon Ramsey</a>
+        <img class="" src="img/user.jpg" alt="User"/></div>
+    </header>
+    
+<!--Navigation Side Bar (Pop Out)-->
+    <div id="Nav" class="Nav">
+        <a href="index.html" ><img class="home" src="resources/img/home.png" alt="Home Button"/></a>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <p>Saved Llama Chow</p>
+        <a href="#"><img class="flex-item" src="img/8.png" alt="recipe" />
+        Regular Cookies</a>
+        <a href="#"><img class="flex-item" src="img/22.png" alt="recipe" />
+        Barnyard Goo</a>
+        <a href="#"><img class="flex-item" src="img/28.png" alt="recipe" />
+        Yellow Goo</a>
+        <p>Homemade Llama Chow</p>
+        <a href="#"><img class="flex-item" src="img/15.png" alt="recipe" />
+        Llama Bread</a>
+        <a href="#"><img class="flex-item" src="img/22.png" alt="recipe" />
+        Trough Goop</a>
+        <a href="recipe.html"><img class="flex-item" src="img/29.png" alt="Recipe" />
+        Perfect Whiskey</a>
+    </div>
+
+<!--Gallery of Recipes-->
+    <div class="gallery-container">
+        <img class="gallery-item" src="img/2.png" alt="Recipe"/>
+        <img class="gallery-item" src="img/3.png" alt="Recipe" />
+        <img class="gallery-item" src="img/4.png" alt="Recipe" />
+        <img class="gallery-item" src="img/5.png" alt="Recipe" />
+        <img class="gallery-item" src="img/7.png" alt="Recipe" />
+        <img class="gallery-item" src="img/8.png" alt="Recipe" />
+        <img class="gallery-item" src="img/9.png" alt="Recipe" />
+        <img class="gallery-item" src="img/10.png" alt="Recipe" />
+        <img class="gallery-item" src="img/11.png" alt="Recipe" />
+        <img class="gallery-item" src="img/12.png" alt="Recipe" />
+        <img class="gallery-item" src="img/13.png" alt="Recipe" />
+        <img class="gallery-item" src="img/14.png" alt="Recipe" />
+        <img class="gallery-item" src="img/15.png" alt="Recipe" />
+        <img class="gallery-item" src="img/16.png" alt="Recipe" />
+        <img class="gallery-item" src="img/17.png" alt="Recipe" />
+        <img class="gallery-item" src="img/18.png" alt="Recipe" />
+        <img class="gallery-item" src="img/19.png" alt="Recipe" />
+        <img class="gallery-item" src="img/20.png" alt="Recipe" />
+        <img class="gallery-item" src="img/21.png" alt="Recipe" />
+        <img class="gallery-item" src="img/22.png" alt="Recipe" />
+        <img class="gallery-item" src="img/23.png" alt="Recipe" />
+        <img class="gallery-item" src="img/24.png" alt="Recipe" />
+        <img class="gallery-item" src="img/25.png" alt="Recipe" />
+        <img class="gallery-item" src="img/26.png" alt="Recipe" />
+        <img class="gallery-item" src="img/27.png" alt="Recipe" />
+        <img class="gallery-item" src="img/28.png" alt="Recipe" />
+        <img class="gallery-item" src="img/29.png" alt="Recipe" />
+        <img class="gallery-item" src="img/30.png" alt="Recipe" />
+        <img class="gallery-item" src="img/31.png" alt="Recipe" />
+        <img class="gallery-item" src="img/32.png" alt="Recipe" />
+        <img class="gallery-item" src="img/33.png" alt="Recipe" />
+    </div>
+
+<!--Miscellaneous Site Links -->
+    <footer class="footer">
+        <ul>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">About Us</a></li>
+        </ul>
+    </footer>
+
+    <script src="resources/js/js.js"></script>
+    
+</body>
+
+</html>

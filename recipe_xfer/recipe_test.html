@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <span id="title"><title>Recipe</title></span>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<div id="rec"></div>
+<script src="recipe.js"></script>
+<script>
+"use strict";
+var recci = "here should recipe be";
+get_recipe();
+
+    function save_recipe() {
+
+    }
+
+    function get_recipe() {
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var recipeOb = JSON.parse(this.responseText);
+                console.log(recipeOb);
+                document.title = recipeOb.recipeName;
+
+                recci = new Recipe(recipeOb.recipeID, recipeOb.recipeName,
+                        recipeOb.recipePerson, recipeOb.recipeType, recipeOb.prepTime,
+                        recipeOb.cookTime);
+                update_ui();
+            }
+        };
+        xmlhttp.open("GET", "recipe_xfer.php", true);
+        xmlhttp.send();
+    }
+
+    function update_ui() {
+        document.getElementById("rec").innerHTML = JSON.stringify(recci);
+    }
+
+</script>
+</body>
+</html>

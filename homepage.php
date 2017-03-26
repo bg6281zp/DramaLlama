@@ -41,7 +41,8 @@ class HomePage{
             $this->doctype ('xhtml', 'strict');
         }
     }
-
+/*This sets the page's doctype, and makes the appropriate declaration for it in the head section of the html.
+ */
     public function doctype ($type='html', $standard='strict'){
         if(in_array($standard, array('strict', 'transitional', 'frameset'))){
             if ($type == 'html'){
@@ -68,7 +69,7 @@ class HomePage{
             }
         }
     }
-
+/* sets user permissions here */
     public function access ($user, $level=1){
         switch ($user){
             case 'users':
@@ -86,6 +87,13 @@ class HomePage{
         }
 
     }
+
+    /*
+* This method is for forms and it sends the user somewhere else if needed.
+* $url->is Where the user is sent.
+* The default is an empty string which sends them to the BASE_URL.
+* $message->is What you would like to tell the user when they are ejected. Use '<br />' tags for newlines.
+ */
     public function eject ($where='', $msg=''){
         if (stristr($where, BASE_URL)){
             $url = $where;
@@ -104,26 +112,58 @@ class HomePage{
             }
         exit;
     }
-    public function title ($title=''){
+    /*
+     * Sets or changes the page title.
+     * $title is the page title
+     * and it returns the current page title.
+     */
+
+    public function title ($title='Drama Llama Home Page'){
         if (!empty($title))
             $this->title = $title;
         return $this->title;
     }
+    /*
+     * Sets the content for the meta description tag - default is the $page->title().
+     * $description	-> is a string
+     */
+
     public function description ($description){
         $this->description = $description;
     }
+
+    /*
+     * Sets the content for the meta keywords tag - default is the $page->title().
+     * $keywords-> is a string
+     * EX. $page->keywords ('php, html, page, class');
+     */
 
     public function keywords ($keywords) {
         $this->keywords = $keywords;
     }
 
+    /*
+     * lets search engines crawl and index the page.
+     * $allow is set to false if you don't want robots (crawlers) to index or follow this page. Default is true.
+    */
     public function robots ($robots) {
         if (is_bool($robots)) $this->robots = $robots;
     }
 
+    /*
+     * This declares the character set of the page.
+     */
+
     public function charset ($charset) {
         $this->charset = $charset;
     }
+    /*
+     * Use this method to include any external files in the head section of the home page.
+     * $external_file can link to one file or many (in an array), call this method as many times as needed.
+     * If there are any duplicates they will be taken out.
+     * To include anything else such as a google maps api include it here, just spell everything out.
+     * $prepend	is set to 'true' if we want the $external_file(s) to come first. Default is 'false'.
+     */
 
     public function link ($link, $prepend=false) {
         if (!is_array($link)) $link = array($link);
@@ -133,14 +173,39 @@ class HomePage{
             foreach ($link as $value) $this->include[] = $value;
         }
     }
+    /*
+     * This method is used to aggregate all of the js calls and
+     * put them all under one $(document).ready(function(){})
+     * in the head section of the home page.
+     * $code -> the js code
+     * $oneliner ->If we don't want this code to be a oneliner in the
+     *  head section then we set this to false.
+     * It comes in handy for debugging.
+     */
+
     public function js ($code, $oneliner=true) {
         if ($oneliner) $code = $this->oneliner($code);
         $this->js[] = $code;
     }
+    /*
+     * This is used to put something in the body tag,
+     * $insert -> is a string
+     */
+
     public function body ($body) {
         $this->body = $body;
     }
 
+    /*
+     * This method is used to add or remove key and value pairs from a url string.
+     * $action	is used for what we would like to do to the url.
+     * Either 'add', 'delete', 'ampify', or just leave it blank
+     * if we just want the current url returned.
+     * $url	is the url string, the default is the page's current url.
+     * $key	is the key we want to add, or delete.
+     * $value is the value of the key we want to add.
+     * Returns the modified url.
+     */
     public function url ($action='', $url='', $key='', $value=NULL) {
         $protocol = ($_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
         if (empty($url)) $url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -174,6 +239,15 @@ class HomePage{
         }
     }
 
+    /*
+     * Returns the entire page, so this is the last method of all that you will call.
+     * $html is the entire content of the home page between the body tags.
+     * If we echo or print anything before this method call, it will screw up the whole layout.
+     * So instead of echo or print, just keep adding everything to the $html variable
+     * then echo $page->display ($html);
+     * It Returns everything from beginning to end.
+     */
+    
     public function display ($content='') {
         $html = '';
         $type = ($this->xhtml) ? 'xhtml' : 'html';

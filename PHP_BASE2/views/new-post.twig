@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Post</title>
+</head>
+<body>
+<form method="post">
+    {# form_widget() renders the form view provided by the form object built using the form service provider #}
+    {{ form_widget(form) }}
+
+    <input type="submit"/><input type="reset"/>
+</form>
+</body>
+</html>

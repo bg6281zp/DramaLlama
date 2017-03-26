@@ -1,0 +1,14 @@
+{
+    "require": {
+        "silex/silex": "~2.0",
+        "twig/twig": "^1.27",
+        "symfony/twig-bridge": "^3.1",
+        "symfony/form": "^3.1",
+        "symfony/validator": "^3.1",
+        "symfony/config": "^3.1",
+        "symfony/translation": "^3.1",
+        "symfony/security-csrf": "^3.1",
+        "symfony/security": "^3.1",
+        "doctrine/dbal": "^2.5"
+    }
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+{# iterate through the array of blog posts #}
+{%  for post in posts %}
+    {# post is an object, so we can access its attributes with a period #}
+    <h1><a href="{{ path('findPost', {id: post.id}) }}">{{ post.title }}</a></h1>
+    by <a href=" {{ path('findPostByAuthor', {author_name: post.author}) }}">{{ post.author }}</a> on {{ post.createddate }}
+    {%  if post.createddate != post.modifieddate %}
+        last modified {{ post.modifieddate }}
+    {%  endif %}
+    <br/><br>
+    {{ post.body }}
+{%  endfor %}
+<br/><br/><br/><br/>
+{# the path function generates the path to the named route findAllPosts #}
+Go the list of <a href="{{ path('findAllPosts') }}">all blog posts</a>.
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Links & Info</title>
+</head>
+<body>
+<p>IMPORTANT: MySQL must be running and the silex_blog_a9 database must be imported before the blog application will work!</p>
+<p>All routes that deal with blog posts should be under /blog.  Here are the existing ones:
+<ul>
+    <li><a href="{{ path('findAllPosts') }}">{{ path('findAllPosts') }}</a> - list of all blog posts.</li>
+    <li><a href="{{ path('findPost', {id: 1}) }}">{{ path('findPost', {id: 1}) }}</a> - view a specific post by its ID.</li>
+    <li><a href="{{ path('newPost') }}">{{ path('newPost') }}</a> - form to create a new post.</li>
+</ul>
+</p>
+<p>All routes that deal with users should be under /user.  Here are the existing ones:
+<ul>
+    <li><a href="{{ path('userLogin') }}">{{ path('userLogin') }}</a> - the login form.</li>
+    <li><a href="{{ path('userTest') }}">{{ path('userTest') }}</a> - test to see if a user is currently logged in.</li>
+    <li><a href="{{ path('userShowRoles') }}">{{ path('userShowRoles') }}</a> - show the roles of a currently logged in user.</li>
+    <li><a href="/user/logout">/user/logout</a> - log out a currently logged in user.</li>
+    <li>/user/login_check - processes the login form input.</li>
+</ul>
+</p>
+<p>Existing usernames and passwords:</p>
+<ul>
+    <li>username - password - roles</li>
+    <li>admin - foo - ROLE_ADMIN, ROLE_USER</li>
+    <li>testuser - foo - ROLE_USER</li>
+    <li>testuser2 - foo - ROLE_USER</li>
+</ul>
+</body>
+</html>

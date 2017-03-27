@@ -1,3 +1,4 @@
+drop schema NummyLlama;
 create schema NummyLlama;
 
 use NummyLlama;
@@ -79,7 +80,7 @@ OrderNumber integer,
 InstructionID varchar(100) not null,
 primary key (RecipeID, InstructionID),
 foreign key (RecipeID) references Recipe (RecipeID),
-foreign key (InstructionID) references Instructions (InstructionID)
+foreign key (InstructionID) references Instructions (InstructionID));
 
 create table InstructionIngredients (
 IngredientID varchar(100) not null,

@@ -1,3 +1,5 @@
+USE nummyllama;
+
 INSERT INTO Unit VALUES('1','ounce');
 INSERT INTO Unit VALUES('2','fluid ounce');
 INSERT INTO Unit VALUES('3','cup');
@@ -14,15 +16,79 @@ INSERT INTO Unit VALUES('13','milliliter');
 INSERT INTO Unit VALUES('14','gram');
 INSERT INTO Unit VALUES('15','milligram');
 INSERT INTO Unit VALUES('16','kilogram');
-INSERT INTO User VALUES('1','exist','Joel,'Hobart','jhobart@gmail.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('2','aardvarkvalcano','Kyli,'Daigle','re9145bv@metrostate.edu','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('3','cc','Carly,'Coughlin','bg6281zp@metrostate.edu','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('4','donovan','Donovan,'Smith','vw8111bz@metrostate.edu','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('5','patrick.inthisane','Patrick,'Inthisane','xz8081pg@metrostate.edu','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('6','goodeaterkenji','Kenji,'Lopez-Alt','kenji@fk_seriouseats.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('7','igarontee','Justin,'Wilson','jwilson@fk_justinwilson.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('8','jchild','Julia,'Child','jchild@juliachild.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('9','kpaul','Paul,'Prudhomme','paul@fk_chefpaul.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
-INSERT INTO User VALUES('10','beardy','James,'Beard','james@fk_jamesbeard.org','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
 
- 
+INSERT INTO User VALUES('1','exist','Joel','Hobart','jhobart@gmail.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('2','aardvarkvalcano','Kyli','Daigle','re9145bv@metrostate.edu','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('3','cc','Carly','Coughlin','bg6281zp@metrostate.edu','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('4','donovan','Donovan','Smith','vw8111bz@metrostate.edu','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('5','patrick.inthisane','Patrick','Inthisane','xz8081pg@metrostate.edu','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('6','goodeaterkenji','Kenji','Lopez-Alt','kenji@fk_seriouseats.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('7','igarontee','Justin','Wilson','jwilson@fk_justinwilson.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('8','jchild','Julia','Child','jchild@juliachild.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('9','kpaul','Paul','Prudhomme','paul@fk_chefpaul.com','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+INSERT INTO User VALUES('10','beardy','James','Beard','james@fk_jamesbeard.org','thisisnotapwhash','2017-04-23','2017-04-23','2017-04-23');
+
+INSERT INTO Recipe VALUES ('1','Jumboliar','1',13,230,'2017-04-26','2017-04-26');
+INSERT INTO Recipe VALUES ('2','Gettin Figgy Pudding','2',45,180,'2017-04-26','2017-04-26');
+
+INSERT INTO Ingredients VALUES('1','water','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('2','salt','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('3','white vinegar','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('4','cider vinegar','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('5','bourbon','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('6','cheddar cheese','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('7','ground beef','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('8','chicken breast','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('9','vegetable bouillon','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('10','Marmite','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('11','flour','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('12','onion, diced','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('13','onion, finely chopped','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('14','butter','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('15','milk, lowfat','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('16','buttermilk','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('17','masa farina','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('18','baking powder','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('19','baking soda','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('20','xanthan gum','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('21','figs, chopped','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('22','dates, chopped','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('23','white sugar','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('24','vanilla','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('25','brown sugar','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('26','coconut flour','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('27','orange zest','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('28','orange juice','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('29','banana','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('30','cornmeal','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('31','soy milk','2017-04-23','2017-04-23');
+INSERT INTO Ingredients VALUES('32','garlic clove','2017-04-23','2017-04-23');
+
+INSERT INTO Instructions VALUES ('1','mix');
+INSERT INTO Instructions VALUES ('2','blend');
+INSERT INTO Instructions VALUES ('3','combine until everything is smooth');
+INSERT INTO Instructions VALUES ('4','blend for 30-60 seconds until no chunks are present');
+INSERT INTO Instructions VALUES ('5','chop finely');
+INSERT INTO Instructions VALUES ('6','blend on high until stiff peaks appear');
+INSERT INTO Instructions VALUES ('7','fold into batter');
+INSERT INTO Instructions VALUES ('8','cut into disks');
+INSERT INTO Instructions VALUES ('9','drink with friends');
+INSERT INTO Instructions VALUES ('10','bake at 350 degrees');
+
+INSERT INTO InstructionIngredients VALUES ('1','2','1','3');
+INSERT INTO InstructionIngredients VALUES ('2','2','3','2');
+INSERT INTO InstructionIngredients VALUES ('10','2','4','1');
+INSERT INTO InstructionIngredients VALUES ('20','3','2','2');
+INSERT INTO InstructionIngredients VALUES ('23','1','9','½');
+INSERT INTO InstructionIngredients VALUES ('11','1','3','2');
+
+INSERT INTO RecipeInstructions VALUES('1','1','1');
+INSERT INTO RecipeInstructions VALUES('1','2','2');
+INSERT INTO RecipeInstructions VALUES('1','3','5');
+INSERT INTO RecipeInstructions VALUES('1','4','6');
+INSERT INTO RecipeInstructions VALUES('2','1','3');
+INSERT INTO RecipeInstructions VALUES('2','2','4');
+INSERT INTO RecipeInstructions VALUES('2','3','7');
+INSERT INTO RecipeInstructions VALUES('2','4','8');
+INSERT INTO RecipeInstructions VALUES('2','5','9');
+INSERT INTO RecipeInstructions VALUES('2','6','10');

@@ -70,11 +70,9 @@ foreign key (UnitID) references Unit(UnitID));
 
 create table Instructions (
 InstructionID varchar(100) not null,
-RecipeID varchar(100) not null,
 OrderNumber integer,
 Description varchar(2000),
-primary key (InstructionID),
-foreign key (RecipeID) references Recipe(RecipeID));
+primary key (InstructionID));
 
 create table RecipeInstructions (
 RecipeID varchar(100) not null,

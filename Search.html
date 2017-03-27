@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>Nummy Llama</title>
+<link rel="stylesheet" href="main.css">
+
+
+<script>
+function showHint(str) {
+    if (str.length == 0) { 
+        document.getElementById("txtHint").innerHTML = "";
+        return;
+    } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("txtHint").innerHTML = this.responseText;
+            }
+        };
+        xmlhttp.open("GET", "results.php?q=" + str, true);
+        xmlhttp.send();
+    }
+}
+</script>
+
+
+</head>
+<body>
+    
+<!--Top Menu Bar-->
+    <header class="header">
+        <div onclick="openNav()" class="menu-icon-cont">
+        <div class="menu-icon"></div>
+        <div class="menu-icon"></div>
+        <div class="menu-icon"></div></div>
+        <form action="/action_page.php"> 
+        <input type="text" onkeyup="showHint(this.value)">
+
+        </form>
+        <div class="user"><a href="#">Gordon Ramsey</a>
+        <img class="" src="img/user.jpg" alt="User"/></div>
+    </header>
+    
+<!--Navigation Side Bar (Pop Out)-->
+    <div id="Nav" class="Nav">
+        <a href="index.html" ><img class="home" src="resources/img/home.png" alt="Home Button"/></a>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <p>Saved Llama Chow</p>
+        <a href="#"><img class="flex-item" src="img/8.png" alt="recipe" />
+        Regular Cookies</a>
+        <a href="#"><img class="flex-item" src="img/22.png" alt="recipe" />
+        Barnyard Goo</a>
+        <a href="#"><img class="flex-item" src="img/28.png" alt="recipe" />
+        Yellow Goo</a>
+        <p>Homemade Llama Chow</p>
+        <a href="#"><img class="flex-item" src="img/15.png" alt="recipe" />
+        Llama Bread</a>
+        <a href="#"><img class="flex-item" src="img/22.png" alt="recipe" />
+        Trough Goop</a>
+        <a href="recipe.html"><img class="flex-item" src="img/29.png" alt="Recipe" />
+        Perfect Whiskey</a>
+    </div>
+
+<p align="center"><span id="txtHint"></span></p>
+
+<!--Miscellaneous Site Links -->
+    <footer class="footer">
+        <ul>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">About Us</a></li>
+        </ul>
+    </footer>
+
+    <script src="js.js"></script>
+    
+</body>
+</html>

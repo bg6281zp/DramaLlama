@@ -75,13 +75,6 @@ INSERT INTO Instructions VALUES ('8','cut into disks');
 INSERT INTO Instructions VALUES ('9','drink with friends');
 INSERT INTO Instructions VALUES ('10','bake at 350 degrees');
 
-INSERT INTO InstructionIngredients VALUES ('1','2','1','3');
-INSERT INTO InstructionIngredients VALUES ('2','2','3','2');
-INSERT INTO InstructionIngredients VALUES ('10','2','4','1');
-INSERT INTO InstructionIngredients VALUES ('20','3','2','2');
-INSERT INTO InstructionIngredients VALUES ('23','1','9','½');
-INSERT INTO InstructionIngredients VALUES ('11','1','3','2');
-
 INSERT INTO RecipeInstructions VALUES('1','1','1');
 INSERT INTO RecipeInstructions VALUES('1','2','2');
 INSERT INTO RecipeInstructions VALUES('1','3','5');
@@ -92,3 +85,11 @@ INSERT INTO RecipeInstructions VALUES('2','3','7');
 INSERT INTO RecipeInstructions VALUES('2','4','8');
 INSERT INTO RecipeInstructions VALUES('2','5','9');
 INSERT INTO RecipeInstructions VALUES('2','6','10');
+
+INSERT INTO InstructionIngredients VALUES ('1','2','1','3');
+INSERT INTO InstructionIngredients VALUES ('2','2','3','2');
+INSERT INTO InstructionIngredients VALUES ('10','2','4','1');
+INSERT INTO InstructionIngredients VALUES ('20','3','2','2');
+INSERT INTO InstructionIngredients VALUES ('23','1','9','½');
+INSERT INTO InstructionIngredients VALUES ('11','1','3','2');
+

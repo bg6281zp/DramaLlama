@@ -68,13 +68,20 @@ foreign key (RecipeID) references Recipe(RecipeID),
 foreign key (IngredientID) references Ingredients(IngredientID),
 foreign key (UnitID) references Unit(UnitID));
 
-create table RecipeInstructions (
+create table Instructions (
 InstructionID varchar(100) not null,
 RecipeID varchar(100) not null,
 OrderNumber integer,
 Description varchar(2000),
 primary key (InstructionID),
 foreign key (RecipeID) references Recipe(RecipeID));
+
+create table RecipeInstructions (
+RecipeID varchar(100) not null,
+InstructionID varchar(100) not null,
+primary key (RecipeID, InstructionID),
+foreign key (RecipeID) references Recipe (RecipeID),
+foreign key (InstructionID) references Instructions (InstructionID)
 
 create table InstructionIngredients (
 IngredientID varchar(100) not null,

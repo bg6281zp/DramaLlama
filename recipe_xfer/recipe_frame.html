@@ -6,10 +6,17 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <link rel="stylesheet" href="main.css">
+    <style>
+        body {
+            position: relative;
+        }
+        .stepodd {padding-top:50px;height:500px;color: #fff; background-color: #1E88E5;}
+        .stepeven {padding-top:50px;height:500px;color: #fff; background-color: #673ab7;}
+    </style>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
-<!-- -->
+
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -22,8 +29,7 @@
         </div>
         <div>
             <div class="collapse navbar-collapse" id="recipeSteps">
-                <ul class="nav navbar-nav">
-                    <div id="stepnavs"></div>
+                <ul class="nav navbar-nav" id="stepnavs">
                 </ul>
             </div>
         </div>
@@ -51,13 +57,11 @@ get_recipe();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var recipeOb = JSON.parse(this.responseText);
-                console.log(recipeOb);
 
                 active_rec = new Recipe(recipeOb.recipeID, recipeOb.recipeName,
                         recipeOb.recipePerson, recipeOb.recipeType, recipeOb.prepTime,
                         recipeOb.cookTime);
                 for(var i=0; i < recipeOb.steps.length; i++) {
-                    console.log(recipeOb.steps[i]);
                     var step = new Step(recipeOb.steps[i].stepID, recipeOb.steps[i].description);
                     for(var x=0; x < recipeOb.steps[i].ingredients.length; x++) {
                         var ing = new Ingredient(recipeOb.steps[i].ingredients[x].ingredientID,
@@ -69,7 +73,7 @@ get_recipe();
                     //active_rec.addStepAt(step, recipeOb.steps[i].order);
                     active_rec.addStep(step);
                 }
-                console.log(active_rec);
+
                 update_ui();
             }
         };
@@ -78,27 +82,28 @@ get_recipe();
     }
 
     function update_ui() {
-        var step;
+        var step, stepnavs, stepholder = $("#steps"), i;
         document.title = active_rec.name;
         $("#rec_name").text(active_rec.name);
-        $("#steps").text(JSON.stringify(active_rec));
-        var stepnavs = $("#stepnavs");
-        var stepholder = $("#steps");
-        for(var i=0; i < active_rec.steps.length; i++) {
+        stepnavs = $("#stepnavs");
+        for(i=0; i < active_rec.steps.length; i++) {
             step = active_rec.steps[i];
-            console.log(step);
             stepnavs.append(get_step_nav(i));
             stepholder.append(get_step(step, i));
         }
     }
 
     function get_step_nav(stepnum) {
+        stepnum++;
         return '<li><a href="#step' + stepnum + '">Step '+ stepnum + '</a></li>'
     }
 
     function get_step(step, order) {
-        var ret = '<div id="step' + order + '" class="container-fluid"><h5>Step ' + order + '</h5>';
-        ret += '<h1>'+ step.description + '</h1><ul>';
+        order++;
+        var ret = '<div id="step' + order + '" class="container-fluid ' +
+            (order % 2 == 0 ? 'stepeven' : 'stepodd') +
+            '"><h5>Step ' + order + '</h5>';
+        ret += '<h3>'+ step.description + '</h3><ul>';
 
         for(var i=0; i < step.ingredients.length; i++) {
             ret += '<li>' + step.ingredients[i].amount + ' ' + step.ingredients[i].unit

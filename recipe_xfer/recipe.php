@@ -11,6 +11,7 @@ class Recipe {
     public $recipeName;
     public $recipeType; // I don't remember what this records - joel
     public $recipePerson; // username of the recipe creator
+    public $recipeUID; // userID of the recipe creator
     public $prepTime;
     public $cookTime;
     public $steps; // array of step classes
@@ -78,7 +79,22 @@ class Recipe {
         $this->recipeType = $recipeType;
         return $this;
     }
+    /**
+     * @return mixed
+     */
+    public function getRecipeUID()
+    {
+        return $this->recipeUID;
+    }
 
+    /**
+     * @param mixed $recipeUID
+     */
+    public function setRecipeUID($recipeUID)
+    {
+        $this->recipeUID = $recipeUID;
+        return $this;
+    }
     /**
      * @return string recipePerson
      */
@@ -259,6 +275,57 @@ class Step {
 
 class Ingredient {
     public $ingredientID;
+    public $name;
     public $unit; // the type of unit, e.g. 'cup', 'each', 'liter'
     public $quantity;
+
+    public function __construct($ingredientID)
+    {
+        $this->ingredientID = $ingredientID;
+    }
+
+    public static function create($ingredientID) {
+        $instance = new self($ingredientID);
+        return $instance;
+    }
+
+    public function setName($name) {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnit()
+    {
+        return $this->unit;
+    }
+
+    /**
+     * @param mixed $unit
+     */
+    public function setUnit($unit)
+    {
+        $this->unit = $unit;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @param mixed $quantity
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+        return $this;
+    }
+
 }

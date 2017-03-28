@@ -39,7 +39,7 @@ function Recipe(oid, name, person, type, preptime, cooktime) {
         if(index === undefined) {
             index = 0;
         }
-        this.steps.splice(1, 1, step);
+        this.steps.splice(index, 1, step);
     }
 
     this.removeStep = function(index) {
@@ -48,20 +48,17 @@ function Recipe(oid, name, person, type, preptime, cooktime) {
     }
 };
 
-function Step(oid, order, description) {
-    if(oid === undefined) {
-        oid = -1;
-    }
-    if(order === undefined) {
-        order = -1;
+function Step(stepID, description) {
+    if(stepID === undefined) {
+        stepID = -1;
     }
     if(description === undefined) {
         description = "";
     }
 
-    this.oid = oid;
-    this.order = steporder;
-    this.description = stepdescription;
+
+    this.stepID = stepID;
+    this.description = description;
     this.ingredients = [];
 
     this.addIngredient = function(ingredient) {
@@ -76,9 +73,12 @@ function Step(oid, order, description) {
 
 }
 
-function Ingredient(oid, unit, amount) {
+function Ingredient(oid, name, unit, amount) {
     if (oid === undefined) {
         oid = -1;
+    }
+    if (name === undefined) {
+        name = "something";
     }
     if (unit === undefined) {
         unit = "unit";
@@ -88,6 +88,7 @@ function Ingredient(oid, unit, amount) {
     }
 
     this.oid = oid;
+    this.name = name;
     this.unit = unit;
     this.amount = amount;
 }

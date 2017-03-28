@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <span id="title"><title>Recipe</title></span>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body data-spy="scroll" data-target=".navbar" data-offset="50">
+<!-- -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#recipeSteps">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" id="rec_name"></a>
+        </div>
+        <div>
+            <div class="collapse navbar-collapse" id="recipeSteps">
+                <ul class="nav navbar-nav">
+                    <div id="stepnavs"></div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<!-- -->
+<div id="steps">
+
+</div>
+
+</body>
+<script src="recipe.js"></script>
+<script>
+"use strict";
+var active_rec = "here should recipe be";
+get_recipe();
+
+    function save_recipe() {
+
+    }
+
+    function get_recipe() {
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var recipeOb = JSON.parse(this.responseText);
+                console.log(recipeOb);
+
+                active_rec = new Recipe(recipeOb.recipeID, recipeOb.recipeName,
+                        recipeOb.recipePerson, recipeOb.recipeType, recipeOb.prepTime,
+                        recipeOb.cookTime);
+                for(var i=0; i < recipeOb.steps.length; i++) {
+                    console.log(recipeOb.steps[i]);
+                    var step = new Step(recipeOb.steps[i].stepID, recipeOb.steps[i].description);
+                    for(var x=0; x < recipeOb.steps[i].ingredients.length; x++) {
+                        var ing = new Ingredient(recipeOb.steps[i].ingredients[x].ingredientID,
+                            recipeOb.steps[i].ingredients[x].name,
+                            recipeOb.steps[i].ingredients[x].unit,
+                            recipeOb.steps[i].ingredients[x].quantity);
+                        step.addIngredient(ing);
+                    }
+                    //active_rec.addStepAt(step, recipeOb.steps[i].order);
+                    active_rec.addStep(step);
+                }
+                console.log(active_rec);
+                update_ui();
+            }
+        };
+        xmlhttp.open("GET", "recipe_xfer.php?recipeID=" + get_param("recipeID"), true);
+        xmlhttp.send();
+    }
+
+    function update_ui() {
+        var step;
+        document.title = active_rec.name;
+        $("#rec_name").text(active_rec.name);
+        $("#steps").text(JSON.stringify(active_rec));
+        var stepnavs = $("#stepnavs");
+        var stepholder = $("#steps");
+        for(var i=0; i < active_rec.steps.length; i++) {
+            step = active_rec.steps[i];
+            console.log(step);
+            stepnavs.append(get_step_nav(i));
+            stepholder.append(get_step(step, i));
+        }
+    }
+
+    function get_step_nav(stepnum) {
+        return '<li><a href="#step' + stepnum + '">Step '+ stepnum + '</a></li>'
+    }
+
+    function get_step(step, order) {
+        var ret = '<div id="step' + order + '" class="container-fluid"><h5>Step ' + order + '</h5>';
+        ret += '<h1>'+ step.description + '</h1><ul>';
+
+        for(var i=0; i < step.ingredients.length; i++) {
+            ret += '<li>' + step.ingredients[i].amount + ' ' + step.ingredients[i].unit
+                + ' ' + step.ingredients[i].name + '</li>';
+        }
+
+        return ret + '</ul></div>';
+    }
+
+    function get_param(param) {
+    var cur_url = decodeURIComponent(window.location.search.substring(1)),
+        url_vars = cur_url.split('&'),
+        param_name,
+        i;
+
+    for (i = 0; i < url_vars.length; i++) {
+        param_name = url_vars[i].split('=');
+
+        if (param_name[0] === param) {
+            return param_name[1] === undefined ? true : param_name[1];
+        }
+    }
+};
+
+</script>
+</html>

@@ -45,10 +45,15 @@
 <script>
 "use strict";
 var active_rec = "here should recipe be";
+save_recipe();
 get_recipe();
 
     function save_recipe() {
-
+        var xmls = new XMLHttpRequest(), json = JSON.stringify(active_rec);
+        console.debug(json);
+        xmls.open("POST", "recipe_save.php", true);
+        xmls.setRequestHeader("Content-type", "application/json");
+        xmls.send(json)
     }
 
     function get_recipe() {
@@ -56,25 +61,26 @@ get_recipe();
 
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                var recipeOb = JSON.parse(this.responseText);
+                console.log(this.responseText);
+                var recipeOb = JSON.parse(this.responseText), i, step, x, ing;
 
                 active_rec = new Recipe(recipeOb.recipeID, recipeOb.recipeName,
                         recipeOb.recipePerson, recipeOb.recipeType, recipeOb.prepTime,
                         recipeOb.cookTime);
-                for(var i=0; i < recipeOb.steps.length; i++) {
-                    var step = new Step(recipeOb.steps[i].stepID, recipeOb.steps[i].description);
-                    for(var x=0; x < recipeOb.steps[i].ingredients.length; x++) {
-                        var ing = new Ingredient(recipeOb.steps[i].ingredients[x].ingredientID,
+                for(i=0; i < recipeOb.steps.length; i++) {
+                    step = new Step(recipeOb.steps[i].stepID, recipeOb.steps[i].description);
+                    for(x=0; x < recipeOb.steps[i].ingredients.length; x++) {
+                        ing = new Ingredient(recipeOb.steps[i].ingredients[x].ingredientID,
                             recipeOb.steps[i].ingredients[x].name,
                             recipeOb.steps[i].ingredients[x].unit,
                             recipeOb.steps[i].ingredients[x].quantity);
                         step.addIngredient(ing);
                     }
-                    //active_rec.addStepAt(step, recipeOb.steps[i].order);
                     active_rec.addStep(step);
                 }
 
                 update_ui();
+                save_recipe();
             }
         };
         xmlhttp.open("GET", "recipe_xfer.php?recipeID=" + get_param("recipeID"), true);
@@ -99,14 +105,21 @@ get_recipe();
     }
 
     function get_step(step, order) {
+        var ret, i, unit;
         order++;
-        var ret = '<div id="step' + order + '" class="container-fluid ' +
+        ret = '<div id="step' + order + '" class="container-fluid ' +
             (order % 2 == 0 ? 'stepeven' : 'stepodd') +
             '"><h5>Step ' + order + '</h5>';
         ret += '<h3>'+ step.description + '</h3><ul>';
 
-        for(var i=0; i < step.ingredients.length; i++) {
-            ret += '<li>' + step.ingredients[i].amount + ' ' + step.ingredients[i].unit
+        for(i=0; i < step.ingredients.length; i++) {
+			if(step.ingredients[i].unit == "unit") {
+				unit = "";
+			}
+			else {
+				unit = step.ingredients[i].unit + (step.ingredients[i].amount > 1 ? "s" : "");
+			}
+            ret += '<li>' + step.ingredients[i].amount + ' ' + unit
                 + ' ' + step.ingredients[i].name + '</li>';
         }
 

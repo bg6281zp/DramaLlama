@@ -13,6 +13,10 @@
         }
         .stepodd {padding-top:50px;height:500px;color: #fff; background-color: #1E88E5;}
         .stepeven {padding-top:50px;height:500px;color: #fff; background-color: #673ab7;}
+        .ef {color: #fff; background-color: inherit; border: none}
+        .ingamt {position: static; color:inherit; background-color: inherit}
+        .ingunt {position: static}
+        .ingdes {position: static}
     </style>
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="50">
@@ -26,6 +30,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#" id="rec_name"></a>
+            <input type="text" id="erec_name" class="form-control">
         </div>
         <div>
             <div class="collapse navbar-collapse" id="recipeSteps">
@@ -34,38 +39,86 @@
             </div>
         </div>
     </div>
+
 </nav>
 <!-- -->
 <div id="steps">
 
 </div>
-
+<button type="button" id="btnaddstep" class="btn btn-primary" onclick=add_step()>Add Step</button>
+<div class="modal fade" id="editdetails" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Details</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="dtrecname" class="form-control">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="save_details()">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script src="recipe.js"></script>
 <script>
 "use strict";
-var active_rec = "here should recipe be";
-save_recipe();
-get_recipe();
+var active_rec = "here should recipe be", edit_state, amt_options = [], enabled_css, rec_id, uid;
+
+enabled_css = {"color" : "#000000", "background-color": "#eee"};
+
+$(document).ready(function() {
+    var step, recob;
+    edit_state = true;
+    uid = 6; // currently, this is Kenji - will set to the actual ID when integration happens
+    populate_amt_options();
+    rec_id = get_param("recipeID");
+    if(rec_id > 0) {
+        get_recipe(rec_id);
+    }
+    else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                recob = JSON.parse(this.responseText);
+                rec_id = recob.recid;
+            }
+            if( typeof rec_id == "number" ) {
+                active_rec = new Recipe(rec_id, "new recipe", recob.username, uid, "", 0, 0);
+                step = new Step(recob.stepid, "");
+                active_rec.addStep(step);
+                update_ui();
+                edit_enable();
+            }
+        }
+        xmlhttp.open("GET", "recipe_funcs.php?func=reserve_rec_id&uid=" + uid);
+        xmlhttp.send();
+    }
+
+});
 
     function save_recipe() {
         var xmls = new XMLHttpRequest(), json = JSON.stringify(active_rec);
-        console.debug(json);
         xmls.open("POST", "recipe_save.php", true);
         xmls.setRequestHeader("Content-type", "application/json");
-        xmls.send(json)
+        xmls.send(json);
     }
 
-    function get_recipe() {
+    function get_recipe(id) {
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
                 var recipeOb = JSON.parse(this.responseText), i, step, x, ing;
 
-                active_rec = new Recipe(recipeOb.recipeID, recipeOb.recipeName,
-                        recipeOb.recipePerson, recipeOb.recipeType, recipeOb.prepTime,
+                active_rec =
+                    new Recipe(recipeOb.recipeID, recipeOb.recipeName,
+                        recipeOb.recipePerson, recipeOb.recipeUID,
+                        recipeOb.recipeType, recipeOb.prepTime,
                         recipeOb.cookTime);
                 for(i=0; i < recipeOb.steps.length; i++) {
                     step = new Step(recipeOb.steps[i].stepID, recipeOb.steps[i].description);
@@ -78,25 +131,32 @@ get_recipe();
                     }
                     active_rec.addStep(step);
                 }
-
                 update_ui();
-                save_recipe();
+                edit_disable();
+
             }
         };
-        xmlhttp.open("GET", "recipe_xfer.php?recipeID=" + get_param("recipeID"), true);
+        xmlhttp.open("GET", "recipe_xfer.php?recipeID=" + id, true);
         xmlhttp.send();
     }
+
 
     function update_ui() {
         var step, stepnavs, stepholder = $("#steps"), i;
         document.title = active_rec.name;
         $("#rec_name").text(active_rec.name);
         stepnavs = $("#stepnavs");
+        stepnavs.html("");
+        stepholder.html("");
+
         for(i=0; i < active_rec.steps.length; i++) {
             step = active_rec.steps[i];
             stepnavs.append(get_step_nav(i));
             stepholder.append(get_step(step, i));
         }
+        stepnavs.append('<li></li><button type="button" id="toggleedit" class="btn btn-primary" onclick="toggle_edit(true)">Edit Recipe</button></li>' +
+            '</li><button type="button" id="canceledit" class="btn btn-primary" onclick="toggle_edit(false)">Cancel Edit</button></li>')
+
     }
 
     function get_step_nav(stepnum) {
@@ -104,26 +164,183 @@ get_recipe();
         return '<li><a href="#step' + stepnum + '">Step '+ stepnum + '</a></li>'
     }
 
+    function add_step() {
+        var xmlhttp = new XMLHttpRequest(), step_id, step;
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                step_id = this.responseText;
+            }
+            if( step_id > 0 ) {
+                step = new Step(step_id, "");
+                active_rec.addStep(step);
+                update_ui();
+            }
+        }
+        xmlhttp.open("GET", "recipe_funcs.php?func=reserve_step_id&recid=" +
+            rec_id + "&onum=" + (active_rec.steps.length + 1));
+        xmlhttp.send();
+    }
+
     function get_step(step, order) {
         var ret, i, unit;
         order++;
-        ret = '<div id="step' + order + '" class="container-fluid ' +
+        ret = '<div id="step' + order + '" class="container-fluid step ' +
             (order % 2 == 0 ? 'stepeven' : 'stepodd') +
             '"><h5>Step ' + order + '</h5>';
-        ret += '<h3>'+ step.description + '</h3><ul>';
+        ret += '<h3><input ="text" class="ef form-control step_desc" value="'+ step.description +
+            '"></h3><ul id="inglist' + order + '">';
 
         for(i=0; i < step.ingredients.length; i++) {
-			if(step.ingredients[i].unit == "unit") {
-				unit = "";
-			}
-			else {
-				unit = step.ingredients[i].unit + (step.ingredients[i].amount > 1 ? "s" : "");
-			}
-            ret += '<li>' + step.ingredients[i].amount + ' ' + unit
-                + ' ' + step.ingredients[i].name + '</li>';
+            unit = step.ingredients[i].unit
+            ret += get_ing_entry(order, i, step.ingredients[i].amount, unit,
+                step.ingredients[i].name, step.ingredients[i].oid);
+        }
+        ret += '<li class="ingadd" id="ingadd' + order + '"><button type="button" class="btn btn-primary" onclick="add_ing_row(' +
+            order + ')">Add Ingredient</button></li>';
+        return ret + '</ul></div>';
+    }
+
+    function add_ing_row(step) {
+        var order = $('#inglist' + step + " li").length -1, ingdex = step + '-' + order,
+            new_entry = get_ing_entry(step, order, "","","", -1);
+        $("#ingadd" + step).before(new_entry);
+        $("#ing" + ingdex + ' .ef').css(enabled_css);
+        $("#ingudis" + ingdex).hide();
+    }
+
+    function get_ing_entry(step, order, amt, unit, name, oid) {
+        var ingdex = step + '-' + order;
+        return '<li id="ing' + ingdex +'" class="ingli"><form class="form-inline">' +
+            '<input type="text" id="ingamt' + ingdex + '" class="ingamt form-control ef" value="' + amt + '">' +
+            '<select id="ingunt' + ingdex + '" class="ingunt form-control ef">' + get_unit_options(unit) + "</select>" +
+            '<input type="text" id="ingudis' + ingdex + '" class="ingudis form-control ef">' +
+            '<input type="text" id="ingdes' + ingdex + '" class="ingdes form-control ef" value="' + name + '">' +
+            '<input type="hidden" id="ingoid' + ingdex + '" class="ingoid" value="' + oid + '"</li>' +
+            '</form>';
+    }
+
+    function toggle_edit(save) {
+
+        if(edit_state) {
+            if(save) {
+                populate_activerec();
+                save_recipe();
+                update_ui();
+            }
+            else {
+                update_ui();
+            }
+            edit_disable();
+        }
+        else {
+            edit_enable();
         }
 
-        return ret + '</ul></div>';
+
+    }
+    function edit_disable() {
+        var editfield = $(".ef"), ingunt, ingudis, num_ings, i, ingdex, stepix, stepsli, amt;
+        editfield.css({"color": "inherit", "background-color" : "inherit",
+            "box-shadow" : "none"});
+        editfield.prop('disabled', true);
+        $(".ingamt").css({"width" : "75px"});
+        $(".ingudis").css({"width" : "115px"});
+        $(".ingunt").hide();
+        $(".ingudis").show();
+        $("#erec_name").hide();
+        $("#rec_name").show();
+        stepsli = $(".step_desc").length + 1
+        for(stepix = 1; stepix < stepsli; stepix ++) {
+            num_ings = $("#inglist" + stepix + " .ingli").length;
+            for (i = 0; i < num_ings; i++) {
+                ingdex = stepix + '-' + (i);
+                amt = amt_options[$("#ingunt" + ingdex).val()];
+                if(amt == "unit") {
+                    amt = "";
+                }
+                else {
+                    amt += ($("#ingamt" + ingdex).val() > 1 ? "s" : "");
+                }
+                $("#ingudis" + ingdex).val(amt);
+            }
+        }
+
+        $(".ingadd").hide();
+        $("#toggleedit").text("Edit Recipe");
+        $("#canceledit").hide();
+        edit_state = false;
+
+    }
+    function edit_enable() {
+        var editfield = $(".ef"), erecname = $("#erec_name");
+        editfield.css(enabled_css);
+        editfield.prop('disabled', false);
+        $(".ingamt").css({"width" : "auto"});
+        $(".ingunt").show();
+        $(".ingudis").hide();
+        $(".ingadd").show();
+        $("#rec_name").hide();
+        erecname.val(active_rec.name);
+        erecname.show();
+        $("#toggleedit").text("Save Recipe");
+        $("#canceledit").show()
+        edit_state = true;
+    }
+
+    function populate_activerec() {
+        var stepix, stepob, num_ings, stepsli = $(".step_desc").length + 1, i, ingdex, ingob,
+            oid, desc, unit, amount;
+        active_rec.setName( $("#erec_name").val() );
+        active_rec.setPreptime(); // TODO: WTF! I forgot the times!
+        active_rec.setCooktime();
+        active_rec.clearSteps();
+        for(stepix = 1; stepix < stepsli; stepix ++) {
+            num_ings = $("#inglist" + stepix + " .ingli").length;
+            stepob = new Step(stepix, $("#step" + stepix + " .step_desc").val());
+            for(i = 0; i < num_ings; i++) {
+                ingdex = stepix + '-' + (i);
+                desc =  "#ingoid" + ingdex;
+                oid = $(desc);
+                desc = $("#ingdes" + ingdex);
+                unit = $("#ingunt" + ingdex);
+                amount = $("#ingamt" + ingdex);
+                ingob = new Ingredient(oid.val(), desc.val(), unit.val(), amount.val());
+                stepob.addIngredient(ingob);
+            }
+            active_rec.addStep(stepob)
+        }
+    }
+
+    function get_unit_options(unit) {
+        var i = 1, ret = "";
+        for(i; i < 17; i++) {
+            ret += '<option value="' + i + '"';
+            if( i == unit ) ret += ' selected';
+            ret += '>' + amt_options[i] + '</option>';
+        }
+        return ret;
+    }
+
+    function populate_amt_options() {
+        // TODO: populate this from the db table
+
+        amt_options[1] = "ounce";
+        amt_options[2] = "fluid ounce";
+        amt_options[3] = "cup";
+        amt_options[4] = "pint";
+        amt_options[5] = "quart";
+        amt_options[6] = "gallon";
+        amt_options[7] = "teaspoon";
+        amt_options[8] = "tablespoon";
+        amt_options[9] = "drop";
+        amt_options[10] = "unit";
+        amt_options[11] = "pound";
+        amt_options[12] = "liter";
+        amt_options[13] = "milliliter";
+        amt_options[14] = "gram";
+        amt_options[15] = "milligram";
+        amt_options[16] = "kilogram";
+
     }
 
     function get_param(param) {
@@ -132,14 +349,17 @@ get_recipe();
         param_name,
         i;
 
-    for (i = 0; i < url_vars.length; i++) {
-        param_name = url_vars[i].split('=');
+        for (i = 0; i < url_vars.length; i++) {
+            param_name = url_vars[i].split('=');
 
-        if (param_name[0] === param) {
-            return param_name[1] === undefined ? true : param_name[1];
+            if (param_name[0] === param) {
+                return param_name[1] === undefined ? true : param_name[1];
+            }
         }
-    }
-};
+        return 0;
+    };
 
 </script>
+
+
 </html>

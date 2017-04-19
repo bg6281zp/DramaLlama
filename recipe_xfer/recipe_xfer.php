@@ -18,8 +18,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 else {
+
     $sql = "SELECT r.RecipeName, u.UserID, u.UserName, u.FirstName, u.LastName, r.PrepTime, r.CookTime
-          FROM recipe r, User u 
+          FROM Recipe r, User u 
           WHERE r.UserID = u.UserID and recipeID = " . $recipe_id;
     $result = $conn->query($sql);
 
@@ -43,7 +44,7 @@ else {
             ->setCookTime($row["CookTime"]);
         // get steps (aka Instructions)
         $sql = "SELECT ri.OrderNumber, i.InstructionID, i.Description
-                FROM recipeinstructions ri, instructions i
+                FROM RecipeInstructions ri, Instructions i
                 WHERE
 	              ri.RecipeID = " . $recipe_id .
                 " and ri.InstructionID = i.InstructionID 
@@ -55,17 +56,16 @@ else {
                 $new_step = Step::create($row["InstructionID"])
                     ->setDescription($row["Description"])
                     ->setOrder($row["OrderNumber"]);
-                $ing_sql = "SELECT ig.IngredientID, ig.IngredientName, ii.Quantity, un.UnitName
-                            FROM instructioningredients ii, ingredients ig, unit un
+                $ing_sql = "SELECT ig.IngredientID, ig.IngredientName, ii.Quantity, ii.UnitID
+                            FROM InstructionIngredients ii, Ingredients ig
                             WHERE ii.IngredientID = ig.IngredientID
-	                          AND ii.UnitID = un.UnitID
 	                          AND ii.InstructionID = " . $row["InstructionID"];
                 $ing_result = $conn->query($ing_sql);
                 if($ing_result->num_rows > 0) {
                     while($ing_row = $ing_result->fetch_assoc()) {
                         $ing = Ingredient::create($ing_row["IngredientID"])
                             ->setName($ing_row["IngredientName"])
-                            ->setUnit($ing_row["UnitName"])
+                            ->setUnit($ing_row["UnitID"])
                             ->setQuantity($ing_row["Quantity"]);
                         $new_step->addIngredient($ing);
                     }

@@ -3,15 +3,20 @@
  */
 "use strict";
 
-function Recipe(oid, name, person, type, preptime, cooktime) {
+function Recipe(oid, name, person, uid, type, preptime, cooktime) {
+    var oid, name, person, uid, type, preptime, cooktime;
     if(oid === undefined) {
         oid = -1;
     }
     if(name === undefined) {
         name = "Recipe";
     }
+
     if(person === undefined) {
         person = "Nobody";
+    }
+    if(uid === undefined) {
+        uid = 0;
     }
     if(preptime === undefined) {
         preptime = 0;
@@ -24,10 +29,28 @@ function Recipe(oid, name, person, type, preptime, cooktime) {
 
     this.oid = oid;
     this.name = name;
+    this.uid = uid;
     this.person = person;
     this.type = type;
     this.preptime = preptime;
     this.cooktime = cooktime;
+
+    this.setName = function(name) {
+        if(name === undefined) {
+            name = "Recipe";
+        }
+        this.name = name;
+    }
+
+    this.setPreptime = function(time) {
+        if(time === undefined) time = 0;
+        this.preptime = time;
+    }
+
+    this.setCooktime = function(time) {
+        if(time === undefined) time = 0;
+        this.cooktime = time;
+    }
 
     this.addStep = function(step) {
         if(step === undefined) return;
@@ -45,6 +68,10 @@ function Recipe(oid, name, person, type, preptime, cooktime) {
     this.removeStep = function(index) {
         if(index === undefined) return;
         this.steps.splice(index, 1);
+    }
+
+    this.clearSteps = function() {
+        this.steps = [];
     }
 };
 
@@ -81,7 +108,7 @@ function Ingredient(oid, name, unit, amount) {
         name = "something";
     }
     if (unit === undefined) {
-        unit = "unit";
+        unit = 10; // the default 'unit' name
     }
     if (amount === undefined) {
         amount = 1;

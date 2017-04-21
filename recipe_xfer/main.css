@@ -49,7 +49,7 @@ a:link {
 /* Search Bar */
 input[type=text] {
     background-color: white;
-    background-image: url('../img/search.png');
+    /*background-image: url('../img/search.png');*/
     background-repeat: no-repeat;
     padding-left: 25px;
 }

@@ -1,4 +1,6 @@
 /**
+ * Recipe, Step and Ingredient objects, used on the client (web browser) side.
+ *
  * Created by joel on 3/7/17.
  */
 "use strict";

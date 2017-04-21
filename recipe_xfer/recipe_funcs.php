@@ -19,19 +19,23 @@ $time_stamp = date("Y-m-d H:m:s");
 $func =  sanitize($_GET["func"]);
 
 switch ($func) {
-    case "reserve_rec_id" :
+    case "get_rec_id" :
 
-        echo reserve_rec_id($conn, sanitize($_GET["uid"]));
+        echo get_rec_id($conn, sanitize($_GET["uid"]));
         break;
-    case "reserve_step_id" :
-        echo reserve_step_id($conn, sanitize($_GET["recid"]), sanitize($_GET["onum"]));
+    case "get_step_id" :
+        echo get_step_id($conn);
         break;
     default:
         echo "I know nothing";
 }
 
-function reserve_rec_id($conn, $uid) {
+function get_rec_id($conn, $uid) {
     $retval = [];
+
+    $retval['recid'] = uniqid();
+    $retval['stepid'] = uniqid();
+    /*
     $sql = "SELECT RecipeID from Recipe ORDER BY RecipeID * 1 DESC LIMIT 1;";
     $result = $conn->query($sql);
     $retval['recid'] = $result->fetch_assoc()["RecipeID"] + 1;
@@ -48,7 +52,7 @@ function reserve_rec_id($conn, $uid) {
     $sql = "INSERT INTO RecipeInstructions (RecipeID, OrderNumber, InstructionID) VALUES (" .
         $retval['recid'] . ",1," .$retval['stepid'] . ");";
     $conn->query($sql);
-
+    */
     $sql = "SELECT FirstName, LastName FROM User WHERE UserID=" . $uid . ";";
     $result = $conn->query($sql);
     if($result->num_rows > 0) {
@@ -62,7 +66,10 @@ function reserve_rec_id($conn, $uid) {
 
 }
 
-function reserve_step_id($conn, $recid, $ordernum) {
+function get_step_id($conn) {
+    return uniqid();
+
+    /*
     $sql = "SELECT InstructionID FROM Instructions ORDER BY InstructionID * 1 DESC LIMIT 1";
     $result = $conn->query($sql);
     $retval = $result->fetch_assoc()["InstructionID"] + 1;
@@ -73,6 +80,7 @@ function reserve_step_id($conn, $recid, $ordernum) {
         $recid . "," . $ordernum . "," .$retval . ");";
     $conn->query($sql);
     return $retval;
+    */
 }
 
 function sanitize($input)

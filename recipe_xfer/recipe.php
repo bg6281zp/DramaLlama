@@ -9,8 +9,8 @@
 class Recipe {
     public $recipeID;
     public $recipeName;
-    public $recipeType; // I don't remember what this records - joel
-    public $recipePerson; // username of the recipe creator
+    public $recipeType;
+    public $recipePerson; // full name of the recipe creator
     public $recipeUID; // userID of the recipe creator
     public $prepTime;
     public $cookTime;
@@ -18,7 +18,7 @@ class Recipe {
     public $tags; // array of tag
 
     /**
-     * recipe constructor.
+     * Recipe constructor
      * @param $recipeID
      */
     public function __construct($recipeID)
@@ -246,7 +246,7 @@ class Step {
     }
 
     /**
-     * @return mixed
+     * @return $ingredient array
      */
     public function getIngredients()
     {
@@ -276,7 +276,7 @@ class Step {
 class Ingredient {
     public $ingredientID;
     public $name;
-    public $unit; // the type of unit, e.g. 'cup', 'each', 'liter'
+    public $unit; // the id of the unit name, from the unit table
     public $quantity;
 
     public function __construct($ingredientID)
@@ -303,7 +303,7 @@ class Ingredient {
     }
 
     /**
-     * @param mixed $unit
+     * @param int $unit
      */
     public function setUnit($unit)
     {

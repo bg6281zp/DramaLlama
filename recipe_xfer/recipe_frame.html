@@ -77,35 +77,42 @@ $(document).ready(function() {
     uid = 6; // currently, this is Kenji - will set to the actual ID when integration happens
     populate_amt_options();
     rec_id = get_param("recipeID");
-    if(rec_id > 0) {
-        get_recipe(rec_id);
+    if(rec_id == -1 || rec_id.length == 0) {
+        new_recipe();
     }
     else {
+        get_recipe(rec_id);
+    }
+
+});
+
+    function new_recipe() {
+        var recob, step;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 recob = JSON.parse(this.responseText);
                 rec_id = recob.recid;
             }
-            if( typeof rec_id == "number" ) {
+            if( recob !== undefined && rec_id.length > 0 ) {
+                console.debug(recob);
                 active_rec = new Recipe(rec_id, "new recipe", recob.username, uid, "", 0, 0);
                 step = new Step(recob.stepid, "");
                 active_rec.addStep(step);
                 update_ui();
                 edit_enable();
             }
-        }
-        xmlhttp.open("GET", "recipe_funcs.php?func=reserve_rec_id&uid=" + uid);
+        };
+        xmlhttp.open("GET", "recipe_funcs.php?func=get_rec_id&uid=" + uid);
         xmlhttp.send();
     }
-
-});
 
     function save_recipe() {
         var xmls = new XMLHttpRequest(), json = JSON.stringify(active_rec);
         xmls.open("POST", "recipe_save.php", true);
         xmls.setRequestHeader("Content-type", "application/json");
         xmls.send(json);
+        console.debug("Tried to save: " + json);
     }
 
     function get_recipe(id) {
@@ -133,7 +140,6 @@ $(document).ready(function() {
                 }
                 update_ui();
                 edit_disable();
-
             }
         };
         xmlhttp.open("GET", "recipe_xfer.php?recipeID=" + id, true);
@@ -165,20 +171,21 @@ $(document).ready(function() {
     }
 
     function add_step() {
-        var xmlhttp = new XMLHttpRequest(), step_id, step;
+        var xmlhttp = new XMLHttpRequest(), step_id, step, neworder;
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 step_id = this.responseText;
+
             }
-            if( step_id > 0 ) {
+            if (step_id.length > 0) {
                 step = new Step(step_id, "");
                 active_rec.addStep(step);
-                update_ui();
+                neworder = active_rec.steps.length - 1;
+                $("#steps").append(get_step(step, neworder));
             }
+            xmlhttp.open("GET", "recipe_funcs.php?func=get_step_id");
+            xmlhttp.send();
         }
-        xmlhttp.open("GET", "recipe_funcs.php?func=reserve_step_id&recid=" +
-            rec_id + "&onum=" + (active_rec.steps.length + 1));
-        xmlhttp.send();
     }
 
     function get_step(step, order) {
@@ -188,7 +195,8 @@ $(document).ready(function() {
             (order % 2 == 0 ? 'stepeven' : 'stepodd') +
             '"><h5>Step ' + order + '</h5>';
         ret += '<h3><input ="text" class="ef form-control step_desc" value="'+ step.description +
-            '"></h3><ul id="inglist' + order + '">';
+            '"><input type="hidden" id="stepid' + order + '" value="' + step.stepID + '">' +
+            '</h3><ul id="inglist' + order + '">';
 
         for(i=0; i < step.ingredients.length; i++) {
             unit = step.ingredients[i].unit
@@ -215,7 +223,7 @@ $(document).ready(function() {
             '<select id="ingunt' + ingdex + '" class="ingunt form-control ef">' + get_unit_options(unit) + "</select>" +
             '<input type="text" id="ingudis' + ingdex + '" class="ingudis form-control ef">' +
             '<input type="text" id="ingdes' + ingdex + '" class="ingdes form-control ef" value="' + name + '">' +
-            '<input type="hidden" id="ingoid' + ingdex + '" class="ingoid" value="' + oid + '"</li>' +
+            '<input type="hidden" id="ingoid' + ingdex + '" class="ingoid" value="' + oid + '"></li>' +
             '</form>';
     }
 
@@ -234,10 +242,12 @@ $(document).ready(function() {
         }
         else {
             edit_enable();
+            if(active_rec.steps.length == 0) {
+                add_step(); // failsafe, since no steps in a recipe breaks things
+            }
         }
-
-
     }
+
     function edit_disable() {
         var editfield = $(".ef"), ingunt, ingudis, num_ings, i, ingdex, stepix, stepsli, amt;
         editfield.css({"color": "inherit", "background-color" : "inherit",
@@ -268,6 +278,7 @@ $(document).ready(function() {
         $(".ingadd").hide();
         $("#toggleedit").text("Edit Recipe");
         $("#canceledit").hide();
+        $("#btnaddstep").hide();
         edit_state = false;
 
     }
@@ -283,24 +294,25 @@ $(document).ready(function() {
         erecname.val(active_rec.name);
         erecname.show();
         $("#toggleedit").text("Save Recipe");
-        $("#canceledit").show()
+        $("#canceledit").show();
+        $("#btnaddstep").show();
         edit_state = true;
     }
 
     function populate_activerec() {
         var stepix, stepob, num_ings, stepsli = $(".step_desc").length + 1, i, ingdex, ingob,
-            oid, desc, unit, amount;
+            oid, desc, unit, amount, stepid;
         active_rec.setName( $("#erec_name").val() );
         active_rec.setPreptime(); // TODO: WTF! I forgot the times!
         active_rec.setCooktime();
         active_rec.clearSteps();
         for(stepix = 1; stepix < stepsli; stepix ++) {
             num_ings = $("#inglist" + stepix + " .ingli").length;
-            stepob = new Step(stepix, $("#step" + stepix + " .step_desc").val());
+            stepid = $("#stepid" + stepix);
+            stepob = new Step(stepid.val(), $("#step" + stepix + " .step_desc").val());
             for(i = 0; i < num_ings; i++) {
                 ingdex = stepix + '-' + (i);
-                desc =  "#ingoid" + ingdex;
-                oid = $(desc);
+                oid = $("#ingoid" + ingdex);
                 desc = $("#ingdes" + ingdex);
                 unit = $("#ingunt" + ingdex);
                 amount = $("#ingamt" + ingdex);
@@ -356,8 +368,8 @@ $(document).ready(function() {
                 return param_name[1] === undefined ? true : param_name[1];
             }
         }
-        return 0;
-    };
+        return "";
+    }
 
 </script>
 

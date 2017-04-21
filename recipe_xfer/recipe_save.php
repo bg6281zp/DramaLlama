@@ -8,28 +8,21 @@
 require_once "db_conn.php";
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-date_default_timezone_set("America/Chicago");
-$time_stamp = date("Y-m-d H:m:s");
-
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 else {
-    $recipe_raw = file_get_contents("php://input");
-
-    $rec = json_decode($recipe_raw);
+    $raw = file_get_contents("php://input");
+    $rec = json_decode($raw);
 
     $rec_id = $rec->oid;
     $rec_uid = $rec->uid;
 
-
-    $sql = "INSERT INTO rup (updated) VALUE ('" . $rec->name . "');";
-    $conn->query($sql);
     if($rec_id == -1) { // -1 is a flag indicating a new recipe from the client
-        $rec_id = recipe_insert($rec->name, $rec->uid, $rec->preptime, $rec->cooktime, $time_stamp, $conn);
+        $rec_id = recipe_insert(uniqid(), $rec->name, $rec->uid, $rec->preptime, $rec->cooktime, $conn);
     }
     else {
-        $rec_id = recipe_save($rec_id, $rec->name, $rec->uid, $rec->preptime, $rec->cooktime, $time_stamp, $conn);
+        $rec_id = recipe_save($rec_id, $rec->name, $rec->uid, $rec->preptime, $rec->cooktime, $conn);
     }
 
     $order_num = 1;
@@ -43,8 +36,8 @@ else {
 
 }
 
-function recipe_save($recid, $recname, $recuid, $prep, $cook, $timestamp, $conn) {
-    $sql = "SELECT UserID FROM Recipe where RecipeID =" . $recid . ";";
+function recipe_save($recid, $recname, $recuid, $prep, $cook, $conn) {
+    $sql = "SELECT UserID FROM Recipe where RecipeID ='" . $recid . "';";
     $result = $conn->query($sql);
     if($result->num_rows > 0) { // recid exists
         $row = $result->fetch_assoc();
@@ -54,29 +47,26 @@ function recipe_save($recid, $recname, $recuid, $prep, $cook, $timestamp, $conn)
                 "PrepTime=" . $prep . ", " .
                 "CookTime=" . $cook . ", " .
                 "DateUpdated=NOW()" .
-                " WHERE RecipeID=" . $recid . ";";
+                " WHERE RecipeID='" . $recid . "';";
             $conn->query($sql);
-            return $recuid;
+            return $recid;
+        }
+        else {
+            // the user saving is not the original user, so treat this as a new recipe
+            $recid = uniqid();
         }
     }
-    // fallthrough, if a different user is updating a recipe, treat it as a
-    // new recipe
-    return recipe_insert($recname, $recuid, $prep, $cook, $timestamp, $conn);
+    return recipe_insert($recid, $recname, $recuid, $prep, $cook, $conn);
 }
 
-function recipe_insert($recname, $recuid, $prep, $cook, $timestamp, $conn) {
-    // since this DB was designed to use UUID and we're not yet using UUID, we have to find
-    // a valid ID to insert. This is so greasy, I'm ashamed to type it
-    $sql = "SELECT RecipeID from Recipe ORDER BY RecipeID * 1 DESC LIMIT 1;";
-    $result = $conn->query($sql);
-    $new_id = $result->fetch_assoc()["RecipeID"] + 1;
+function recipe_insert($recid, $recname, $recuid, $prep, $cook, $conn) {
 
     $sql = "INSERT INTO Recipe (RecipeID, RecipeName, UserID, PrepTime, CookTime, DateCreated) " .
-        "VALUES (" . $new_id . ",'" . $recname . "'," . $recuid . "," . $prep .
+        "VALUES ('" . $recid . "','" . $recname . "','" . $recuid . "'," . $prep .
         "," . $cook . ",NOW())";
 
     $conn->query($sql);
-    return $new_id;
+    return $recid;
 }
 
 function step_save($recid, $ordernum, $stepid, $desc, $conn) {
@@ -84,23 +74,21 @@ function step_save($recid, $ordernum, $stepid, $desc, $conn) {
     $result = $conn->query($sql);
     if($result->num_rows > 0) { // Instruction exists
         $sql = "UPDATE Instructions SET Description='" . $desc .
-            "' WHERE InstructionID=". $stepid . ";";
+            "' WHERE InstructionID='". $stepid . "';";
         $conn->query($sql);
         $sql = "UPDATE RecipeInstructions SET OrderNumber=" . $ordernum .
-            " WHERE InstructionID=" . $stepid . ";";
+            " WHERE InstructionID='" . $stepid . "';";
         $conn->query($sql);
         return $stepid;
     }
     else {
-        $sql = "SELECT InstructionID FROM Instructions ORDER BY InstructionID DESC LIMIT 1";
-        $result = $conn->query($sql);
-        $new_id = $result->fetch_assoc()["InstructionID"] + 1;
+        $new_id = uniqid();
 
-        $sql = "INSERT INTO Instructions (InstructionID, Description) VALUES (" .
-            $new_id . ",'" . $desc . "');";
+        $sql = "INSERT INTO Instructions (InstructionID, Description) VALUES ('" .
+            $new_id . "','" . $desc . "');";
         $conn->query($sql);
-        $sql = "INSERT INTO RecipeInstructions (RecipeID, OrderNumber, InstructionID) VALUES (" .
-            $recid . "," . $ordernum . "," .$stepid . ");";
+        $sql = "INSERT INTO RecipeInstructions (RecipeID, OrderNumber, InstructionID) VALUES ('" .
+            $recid . "'," . $ordernum . ",'" .$stepid . "');";
         $conn->query($sql);
         return $new_id;
     }
@@ -108,32 +96,31 @@ function step_save($recid, $ordernum, $stepid, $desc, $conn) {
 
 function save_ingredient($step_num, $ing, $conn) {
     $ingid = $ing->oid;
-    $sql = "SELECT IngredientID FROM Ingredients WHERE IngredientID=" . $ingid . ";";
+    $sql = "SELECT IngredientID FROM Ingredients WHERE IngredientID='" . $ingid . "';";
     $result = $conn->query($sql);
     if($ingid > 0 && $result->num_rows > 0) {
         $sql = "UPDATE Ingredients SET IngredientName='" . $ing->name .
-            "' WHERE IngredientID=" . $ing->oid . ";";
+            "' WHERE IngredientID='" . $ing->oid . "';";
         $conn->query($sql);
     }
     else {
-        $sql = "SELECT IngredientID FROM Ingredients ORDER BY IngredientID * 1 DESC LIMIT 1";
-        $result = $conn->query($sql);
-        $ingid= $result->fetch_assoc()["IngredientID"] + 1;
-        $sql = "INSERT INTO Ingredients (IngredientID, IngredientName) VALUES (" .
-            $ingid . ",'" . $ing->name . "';";
+        $ingid= uniqid();
+        $sql = "INSERT INTO Ingredients (IngredientID, IngredientName) VALUES ('" .
+            $ingid . "','" . $ing->name . "';";
         $conn->query($sql);
     }
 
     $sql = "SELECT IngredientID, InstructionID FROM InstructionIngredients WHERE " .
-        "InstructionID=" . $step_num . " AND IngredientID=" . $ing->oid . ";";
+        "InstructionID='" . $step_num . "' AND IngredientID='" . $ing->oid . "';";
     $result = $conn->query($sql);
     if($result->num_rows > 0) { // InstructionIngredient exists
-        $sql = "UPDATE InstructionIngredients SET UnitID=" . $unitid . ", Quantity='" .
-            $ing->amount . "' WHERE InstructionID=" . $step_num . " AND IngredientID=" . $ingid . ";";
+        $sql = "UPDATE InstructionIngredients SET UnitID='" . $unitid . "', Quantity='" .
+            $ing->amount . "' WHERE InstructionID='" . $step_num . "' AND IngredientID='" . $ingid . "';";
+        $conn->query($sql);
     }
     else {
-        $sql = "INSERT INTO InstructionIngredent (IngredientID, InstructionID, UnitID, Quantity) VALUES (" .
-            $ingid . "," . $step_num . "," . $ing->unit . ",'" . $ing->amount . "';";
+        $sql = "INSERT INTO InstructionIngredent (IngredientID, InstructionID, UnitID, Quantity) VALUES ('" .
+            $ingid . "'," . $step_num . "," . $ing->unit . ",'" . $ing->amount . "';";
         $conn->query($sql);
     }
 }

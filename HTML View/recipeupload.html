@@ -20,6 +20,8 @@ Side Navigation Bar: https://www.w3schools.com/howto/howto_js_sidenav.asp
     <title>Nummy Llama</title>
     <meta name="description" content="A new way to make and use recipes.">
     <link rel="stylesheet" href="resources/css/main.css">
+	<link rel="stylesheet" href="resources/css/bootstrap.css">
+	<link rel="stylesheet" href="resources/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -58,43 +60,47 @@ Side Navigation Bar: https://www.w3schools.com/howto/howto_js_sidenav.asp
         Perfect Whiskey</a>
     </div>
 
-<!--Gallery of Recipes-->
-    <div class="gallery-container">
-        <img class="gallery-item" src="img/2.png" alt="Recipe"/>
-        <img class="gallery-item" src="img/3.png" alt="Recipe" />
-        <img class="gallery-item" src="img/4.png" alt="Recipe" />
-        <img class="gallery-item" src="img/5.png" alt="Recipe" />
-        <img class="gallery-item" src="img/7.png" alt="Recipe" />
-        <img class="gallery-item" src="img/8.png" alt="Recipe" />
-        <img class="gallery-item" src="img/9.png" alt="Recipe" />
-        <img class="gallery-item" src="img/10.png" alt="Recipe" />
-        <img class="gallery-item" src="img/11.png" alt="Recipe" />
-        <img class="gallery-item" src="img/12.png" alt="Recipe" />
-        <img class="gallery-item" src="img/13.png" alt="Recipe" />
-        <img class="gallery-item" src="img/14.png" alt="Recipe" />
-        <img class="gallery-item" src="img/15.png" alt="Recipe" />
-        <img class="gallery-item" src="img/16.png" alt="Recipe" />
-        <img class="gallery-item" src="img/17.png" alt="Recipe" />
-        <img class="gallery-item" src="img/18.png" alt="Recipe" />
-        <img class="gallery-item" src="img/19.png" alt="Recipe" />
-        <img class="gallery-item" src="img/20.png" alt="Recipe" />
-        <img class="gallery-item" src="img/21.png" alt="Recipe" />
-        <img class="gallery-item" src="img/22.png" alt="Recipe" />
-        <img class="gallery-item" src="img/23.png" alt="Recipe" />
-        <img class="gallery-item" src="img/24.png" alt="Recipe" />
-        <img class="gallery-item" src="img/25.png" alt="Recipe" />
-        <img class="gallery-item" src="img/26.png" alt="Recipe" />
-        <img class="gallery-item" src="img/27.png" alt="Recipe" />
-        <img class="gallery-item" src="img/28.png" alt="Recipe" />
-        <img class="gallery-item" src="img/29.png" alt="Recipe" />
-        <img class="gallery-item" src="img/30.png" alt="Recipe" />
-        <img class="gallery-item" src="img/31.png" alt="Recipe" />
-        <img class="gallery-item" src="img/32.png" alt="Recipe" />
-        <img class="gallery-item" src="img/33.png" alt="Recipe" />
+<!--Help section-->
+    <div id="helpjumbo" class="jumbotron">
+	<div class="row">
+		<div class="text-right"><img src="resources/img/recipes.png" /></div>
+		<img class="inline" src="resources/img/llamasupport.png" />
+		<img class="inline text-right" src="resources/img/trecipequote.png" />
     </div>
+	</div>
+	
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-4 centered">
+        <h2>How to upload a recipe</h2>
+		<p>Once a brand new recipe has been uploaded...</p>
+		<ol>
+			<li>Enter the name of recipe in the upper left hand box (Where it says "Jumboliar" is pictured below)</li>
+			<li>Type the action in the bigger box below(Where it says "mix" pictured below)</li>
+			<li>The first box from left to right is quantity(Choose a fixed quantity)</li>
+			<li>The second box from left to right is the units(Weight measurement)</li>
+			<li>The third box from left to right is the ingredients(Stuff you put in your recipe)</li>
+			<li>Click "Add Ingredient" at the bottom of the list!</li>
+			<li>Click "Add Step" below that if there is more than just one step!</li>
+			<li>Click "Save Recipe" and You're finished!</li>
+			<li>Pat yourself on the back.</li>
+		</ol>
+		<p>If however you click "Cancel/Edit" it will discard the recipe or edit the current recipe.</p>
+    </div>
+	<div class="container bg-info">
+	<img src="resources/img/recipeeditor.png" />
+	</div>
+</div>
+
+
 
 <!--Miscellaneous Site Links -->
     <footer class="footer">
+		<div class="container">
+<div class="col-md-8">
+<h4>I still don't know what I'm doing...help me out Tee!</h4>
+<p><a class="btn btn-default" href="canthelp.html">Learn more &raquo;</a></p>
+</div>
+</div>
         <ul>
             <li><a href="help.html">Help</a></li>
             <li><a href="#">FAQ</a></li>

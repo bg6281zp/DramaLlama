@@ -199,3 +199,30 @@ input[type=text] {
 .recipe-buttons button{
     margin: 5px 25px;
 }
+#menu{
+	position: relative;
+	left:-50px;
+	width:50px;
+	height:50px;
+}
+
+#recipe{
+	position: relative;
+	left:-50px;
+	width:50px;
+	height:50px;
+}
+
+#search{
+	position: relative;
+	left:-55px;
+	width:50px;
+	height:50px;
+}
+
+#user{
+	position: relative;
+	left:-50px;
+	width:50px;
+	height:50px;
+}
